@@ -75,9 +75,20 @@ public:
   }
 };
 
-DCMotor left_motor(6, 9);
-DCMotor right_motor(3, 5);
-LineFollower line_follower(8, 10, 11, 12, 13);
+// Derrete Roda (Roboforge Zer0)
+// DCMotor left_motor(6, 9);
+// DCMotor right_motor(3, 5);
+// LineFollower line_follower(8, 10, 11, 12, 13);
+
+// Sally (Forge and Furious)
+// DCMotor left_motor(3, 5);
+// DCMotor right_motor(6, 9);
+// LineFollower line_follower(8, 10, 11, 12, 13);
+
+// Snoopy (Roboforge F1)
+DCMotor left_motor(4, 16);
+DCMotor right_motor(5, 17);
+LineFollower line_follower(23, 22, 21, 19, 18);
 
 void setup()
 {

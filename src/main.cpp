@@ -76,14 +76,14 @@ public:
 };
 
 // Derrete Roda (Roboforge Zer0)
+// DCMotor left_motor(6, 9);
+// DCMotor right_motor(3, 5);
+// LineFollower line_follower(8, 10, 11, 12, 13);
+
+// Sally (Forge and Furious)
 DCMotor left_motor(6, 9);
 DCMotor right_motor(3, 5);
 LineFollower line_follower(8, 10, 11, 12, 13);
-
-// Sally (Forge and Furious)
-// DCMotor left_motor(3, 5);
-// DCMotor right_motor(6, 9);
-// LineFollower line_follower(8, 10, 11, 12, 13);
 
 // Snoopy (Roboforge F1)
 // DCMotor left_motor(4, 16);
@@ -115,38 +115,60 @@ void loop()
   // Serial.println(right_motor.speed);
   // delay(2000);
 
-  int vel_left = 255;
-  int vel_right = 255;
-
-  line_follower.refresh_values();
-
-  for (int i = 0; i <= 4; i++)
+  int velocidade = 0;
+  while (velocidade < 170)
   {
-    Serial.print(line_follower.values[i]);
-  }
-  Serial.println("");
-
-  if (line_follower.values[0])
-  {
-    vel_right = 0;
-  }
-  if (line_follower.values[1])
-  {
-    vel_right -= 200;
-  }
-  if (line_follower.values[3])
-  {
-    vel_left -= 200;
-  }
-  if (line_follower.values[4])
-  {
-    vel_left = 0;
+    right_motor.set_speed(velocidade);
+    left_motor.set_speed(velocidade);
+    right_motor.forward();
+    left_motor.forward();
+    delay(20);
+    velocidade++;
   }
 
-  left_motor.set_speed(vel_left);
-  left_motor.forward();
+  while (1)
+  {
 
-  right_motor.set_speed(vel_right);
-  right_motor.forward();
-  delay(100);
+    int vel_left = 255;
+    int vel_right = 255;
+
+    line_follower.refresh_values();
+
+    for (int i = 0; i <= 4; i++)
+    {
+      Serial.print(line_follower.values[i]);
+    }
+    Serial.println("");
+
+    if (line_follower.values[0])
+    {
+      vel_right = 0;
+    }
+    if (line_follower.values[1])
+    {
+      vel_right -= 200;
+    }
+
+    if (line_follower.values[3])
+    {
+      vel_left -= 200;
+    }
+    if (line_follower.values[4])
+    {
+      vel_left = 0;
+    }
+
+    if (line_follower.values[0] && line_follower.values[4])
+    {
+      // cruzamento (tratativa pra não travar)
+      vel_left = 255;
+      vel_right = 255;
+    }
+    left_motor.set_speed(vel_left);
+    left_motor.forward();
+
+    right_motor.set_speed(vel_right);
+    right_motor.forward();
+    delay(50);
+  }
 }

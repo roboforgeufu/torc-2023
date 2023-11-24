@@ -115,6 +115,7 @@ void loop()
   // Serial.println(right_motor.speed);
   // delay(2000);
 
+  // Aumenta a velocidade inicial gradativamente (tratativa motor Sally)
   int velocidade = 0;
   while (velocidade < 170)
   {
@@ -124,6 +125,18 @@ void loop()
     left_motor.forward();
     delay(20);
     velocidade++;
+
+    line_follower.refresh_values();
+
+    // Tratativa de segurança
+    // (se o robô tá se movendo e viu a linha com outro sensor, já pode
+    // começar a seguir)
+    if (
+        line_follower.values[0] or
+        line_follower.values[1] or
+        line_follower.values[3] or
+        line_follower.values[4])
+      break;
   }
 
   while (1)
@@ -140,18 +153,20 @@ void loop()
     }
     Serial.println("");
 
-    if (line_follower.values[0])
-    {
-      vel_right = 0;
-    }
+    // Sensores intermediários
     if (line_follower.values[1])
     {
       vel_right -= 200;
     }
-
     if (line_follower.values[3])
     {
       vel_left -= 200;
+    }
+
+    // Sensores das extremidades
+    if (line_follower.values[0])
+    {
+      vel_right = 0;
     }
     if (line_follower.values[4])
     {
